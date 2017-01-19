@@ -19,13 +19,6 @@ namespace Hangman.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().Ignore(u => u.AccessFailedCount)
-                                       .Ignore(u => u.EmailConfirmed)
-                                       .Ignore(u => u.LockoutEnabled)
-                                       .Ignore(u => u.LockoutEndDateUtc)
-                                       .Ignore(u => u.PhoneNumber)
-                                       .Ignore(u => u.PhoneNumberConfirmed)
-                                       .Ignore(u => u.TwoFactorEnabled);
             modelBuilder.Entity<IdentityUser>().ToTable("Users");
         }
     }
