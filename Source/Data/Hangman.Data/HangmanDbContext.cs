@@ -26,6 +26,7 @@ namespace Hangman.Data
                                        .Ignore(u => u.PhoneNumber)
                                        .Ignore(u => u.PhoneNumberConfirmed)
                                        .Ignore(u => u.TwoFactorEnabled);
+            modelBuilder.Entity<IdentityUser>().ToTable("Users");
         }
     }
 }
