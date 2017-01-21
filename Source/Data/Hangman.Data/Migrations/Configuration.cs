@@ -72,8 +72,7 @@ namespace Hangman.Data.Migrations
                     LettersGussed = random.Next(10, 20),
                     Lost = random.Next(20, 30),
                     Won = random.Next(3, 15),
-                    WordsGussed = random.Next(10),
-                    User = user
+                    WordsGussed = random.Next(10)
                 };
 
                 context.Score.Add(score);
