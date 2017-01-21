@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using Hangman.Models;
-using Hangman.Web.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Hangman.Data

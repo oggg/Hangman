@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hangman.Models
 {
     public class Score
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, ForeignKey("User")]
         public string Id { get; set; }
 
         public int Won { get; set; }
