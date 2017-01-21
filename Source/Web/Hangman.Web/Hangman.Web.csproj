@@ -276,6 +276,10 @@
       <Project>{15b21da5-2250-4663-a318-5ebbfd82ffc1}</Project>
       <Name>Hangman.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Services\Hangman.Services\Hangman.Services.csproj">
+      <Project>{37C02F7A-0134-4605-82AB-2485D56C121D}</Project>
+      <Name>Hangman.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

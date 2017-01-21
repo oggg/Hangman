@@ -3,7 +3,7 @@ using Hangman.Models;
 
 namespace Hangman.Services.Contracts
 {
-    interface IScoreService
+    public interface IScoreService
     {
         Score Add(Score score);
 

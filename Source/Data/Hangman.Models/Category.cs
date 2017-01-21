@@ -15,6 +15,6 @@ namespace Hangman.Models
 
         public string Name { get; set; }
 
-        public virtual ICollection<Word> Words { get { return this.Words; } set { this.Words = value; } }
+        public virtual ICollection<Word> Words { get { return this.words; } set { this.words = value; } }
     }
 }

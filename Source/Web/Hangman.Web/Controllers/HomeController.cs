@@ -1,17 +1,20 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using Hangman.Services.Contracts;
 
 namespace Hangman.Web.Controllers
 {
     public class HomeController : Controller
     {
-
-        public HomeController()
+        private readonly IScoreService scores;
+        public HomeController(IScoreService scores)
         {
-
+            this.scores = scores;
         }
         public ActionResult Index()
         {
-            return View();
+            var topPlayers = this.scores.GetAll().OrderBy(t => t.Won).Take(10).ToList();
+            return View(topPlayers);
         }
 
         public ActionResult About()
