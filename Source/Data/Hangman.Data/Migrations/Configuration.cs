@@ -61,8 +61,6 @@ namespace Hangman.Data.Migrations
         private void GenerateUserStatistics(HangmanDbContext context)
         {
             var allUsersDefined = context.Users.ToList();
-            //if ef has generated already the ids of the users in the Scores table -> comment the above line and use the one below
-            //get all entries and set default values for statistics
             var random = new Random();
             foreach (var user in allUsersDefined)
             {

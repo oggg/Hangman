@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Hangman.Models;
+using Hangman.Services.Contracts;
 using Hangman.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -15,9 +16,10 @@ namespace Hangman.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
-        public AccountController()
+        private IScoreService scores;
+        public AccountController(IScoreService scores)
         {
+            this.scores = scores;
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -153,6 +155,14 @@ namespace Hangman.Web.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    this.scores.Add(new Score()
+                    {
+                        Id = user.Id,
+                        LettersGussed = 0,
+                        Lost = 0,
+                        Won = 0,
+                        WordsGussed = 0
+                    });
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
