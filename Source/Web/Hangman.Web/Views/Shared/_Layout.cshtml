@@ -20,13 +20,6 @@
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                @if (Request.IsAuthenticated)
-                {
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Create new game", "Index", "Home")</li>
-                    </ul>
-                }
-
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

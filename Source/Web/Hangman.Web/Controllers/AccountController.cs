@@ -79,7 +79,9 @@ namespace Hangman.Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    // return RedirectToLocal(returnUrl);
+                    //TODO: create the controller and action
+                    return RedirectToAction("Create", "Game");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
