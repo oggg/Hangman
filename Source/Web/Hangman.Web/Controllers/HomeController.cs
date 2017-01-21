@@ -13,7 +13,7 @@ namespace Hangman.Web.Controllers
         }
         public ActionResult Index()
         {
-            var topPlayers = this.scores.GetAll().OrderBy(t => t.Won).Take(10).ToList();
+            var topPlayers = this.scores.GetAll().OrderByDescending(t => t.Won).Take(10).ToList();
             return View(topPlayers);
         }
 

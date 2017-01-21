@@ -11,12 +11,12 @@ namespace Hangman.Data
         {
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IdentityUser>().ToTable("Users");
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<IdentityUser>().ToTable("Users");
 
-            base.OnModelCreating(modelBuilder);
-        }
+        //    base.OnModelCreating(modelBuilder);
+        //}
 
         public virtual IDbSet<Category> Categories { get; set; }
 
