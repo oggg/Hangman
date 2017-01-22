@@ -13,8 +13,18 @@ namespace Hangman.Web.Controllers
         }
         public ActionResult Index()
         {
-            var topPlayers = this.scores.GetAll().OrderByDescending(t => t.Won).Take(10).ToList();
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Create", "Game");
+            }
+
+            var topPlayers = this.scores
+                                .GetAll()
+                                .OrderByDescending(t => t.Won)
+                                .Take(10)
+                                .ToList();
             return View(topPlayers);
+
         }
 
         public ActionResult About()

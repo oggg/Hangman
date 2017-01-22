@@ -79,8 +79,6 @@ namespace Hangman.Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    // return RedirectToLocal(returnUrl);
-                    //TODO: create the controller and action
                     return RedirectToAction("Create", "Game");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -173,7 +171,7 @@ namespace Hangman.Web.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Create", "Game");
                 }
                 AddErrors(result);
             }

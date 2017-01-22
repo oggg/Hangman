@@ -13,7 +13,6 @@ namespace Hangman.Models
         [ForeignKey("User1Id")]
         public virtual User FirstPlayer { get; set; }
 
-
         public string User2Id { get; set; }
 
         [ForeignKey("User2Id")]

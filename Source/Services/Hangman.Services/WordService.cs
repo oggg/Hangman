@@ -1,5 +1,6 @@
 ﻿namespace Hangman.Services
 {
+    using System;
     using System.Linq;
     using Contracts;
     using Data.Repositories;
@@ -18,6 +19,16 @@
         {
             Word word = this.words.All().FirstOrDefault(w => w.Id == id && w.CategoryId == categoryId);
             return word;
+        }
+
+        public Word GetRandom(int categoryId)
+        {
+            var randomWord = this.words.All()
+                                        .Where(w => w.CategoryId == categoryId)
+                                        .OrderBy(w => Guid.NewGuid())
+                                        .Take(1)
+                                        .FirstOrDefault();
+            return randomWord;
         }
     }
 }

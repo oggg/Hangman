@@ -9,33 +9,24 @@
 
 
 <div class="row">
-    @if (Request.IsAuthenticated)
-    {
-
-    }
-    else
-    {
-        <h2>Current statistics for top players</h2>
-        <table border="1">
-            <tr>
-                <th>Name</th>
-                <th>Won</th>
-                <th>Lost</th>
-                <th>LettersGussed</th>
-                <th>WordsGussed</th>
-            </tr>
-            @foreach (var score in Model)
+    <h2>Current statistics for top players</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Won</th>
+            <th>Lost</th>
+            <th>LettersGussed</th>
+            <th>WordsGussed</th>
+        </tr>
+        @foreach (var score in Model)
             {
-                <tr>
-                    <td>@score.User.UserName</td>
-                    <th>@score.Won</th>
-                    <th>@score.Lost</th>
-                    <th>@score.LettersGussed</th>
-                    <th>@score.WordsGussed</th>
-                </tr>
-            }
-        </table>
-    }
-    
-
+            <tr>
+                <td>@score.User.UserName</td>
+                <th>@score.Won</th>
+                <th>@score.Lost</th>
+                <th>@score.LettersGussed</th>
+                <th>@score.WordsGussed</th>
+            </tr>
+        }
+    </table>
 </div>
