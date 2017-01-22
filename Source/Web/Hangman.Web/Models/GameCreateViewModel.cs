@@ -4,11 +4,11 @@
 
     public class GameCreateViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Please enter name")]
         [Display(Name = "Name of the game")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please select category.")]
         [Display(Name = "Select category")]
         public int CategoryId { get; set; }
 
