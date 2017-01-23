@@ -14,4 +14,20 @@
         <td>@Model.UserScore.WordsGussed</td>
     </tr>
 </table>
+<br />
+<br />
+@using (Ajax.BeginForm("Guess", null,
+                            new AjaxOptions
+                            {
+                                UpdateTargetId = "word-container",
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "POST"
+                            }, new { id = "searchForm" }))
+{
+    <input type="text" name="query" />
+    <input type="submit" />
+}
 
+<div id="word-container">
+    @Html.Partial("_GameVisualization", Model.GamePlayState)
+</div>

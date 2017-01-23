@@ -99,13 +99,18 @@ namespace Hangman.Web.Controllers
             {
                 CurrentWordState = game.ConvertedWordToPlay,
                 UsedLetters = string.Empty,
-                ImageUrl = System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/") + "0.jpg"
+                ImageUrl = "~/Content/Images/0.jpg"
             };
 
             model.GamePlayState = gps;
 
             return View(model);
         }
+
+        //public ActionResult Guess()
+        //{
+
+        //}
 
         private string GetGuessWord(string dbWord)
         {

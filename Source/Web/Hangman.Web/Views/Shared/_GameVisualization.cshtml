@@ -1,7 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "_GameVisualization";
-}
+﻿@model Hangman.Web.Models.GamePlayStateModel
 
-<h2>_GameVisualization</h2>
-
+<div id="currentwordstate">@Model.CurrentWordState</div>
+<div id="userletters">@Model.UsedLetters</div>
+<img src="@Url.Content(Model.ImageUrl)" />
