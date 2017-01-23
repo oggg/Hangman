@@ -8,13 +8,9 @@
 
         public string Name { get; set; }
 
-        public string User1Id { get; set; }
-
-        public string User2Id { get; set; }
-
         public GameState State { get; set; }
 
-        public int WordId { get; set; }
+        public string Word { get; set; }
 
         public string ConvertedWordToPlay { get; set; }
     }

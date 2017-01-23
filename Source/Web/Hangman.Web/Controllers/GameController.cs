@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web.Caching;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
 using Hangman.Models;
@@ -60,27 +62,63 @@ namespace Hangman.Web.Controllers
 
             var guessWord = GetGuessWord(randomWord.TheWord);
 
-            //TODO: add cache to hold the data for the game
+            GameCacheModel playingGame = new GameCacheModel()
+            {
+                Id = newGame.Id,
+                Name = newGame.Name,
+                State = newGame.State,
+                Word = randomWord.TheWord,
+                ConvertedWordToPlay = guessWord
+            };
+
+            if (this.HttpContext.Cache[playingGame.Id.ToString()] == null)
+            {
+                this.HttpContext.Cache.Insert(
+                    playingGame.Id.ToString(),
+                    playingGame,
+                    null,
+                    DateTime.Now.AddYears(1),
+                    TimeSpan.Zero,
+                    CacheItemPriority.Default,
+                    null);
+            }
+
             return RedirectToAction("Play", new { newGame.Id });
         }
 
         [HttpGet]
         public ActionResult Play(int id)
         {
-            var currentUserId = User.Identity.GetUserId();
-            var currentPlayerScore = this.scores.GetById(currentUserId);
-            return View(currentPlayerScore);
+            var game = (GameCacheModel)this.HttpContext.Cache[id.ToString()];
+            var currentPlayerScore = this.scores.GetById(User.Identity.GetUserId());
+
+            StatisticsPlayGameModel model = new StatisticsPlayGameModel();
+            model.UserScore = currentPlayerScore;
+
+            GamePlayStateModel gps = new GamePlayStateModel()
+            {
+                CurrentWordState = game.ConvertedWordToPlay,
+                UsedLetters = string.Empty,
+                ImageUrl = System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/") + "0.jpg"
+            };
+
+            model.GamePlayState = gps;
+
+            return View(model);
         }
 
         private string GetGuessWord(string dbWord)
         {
-            var charArr = dbWord.ToCharArray();
-            for (int i = 1; i < charArr.Length - 1; i++)
+            var wordArr = new string[dbWord.Length];
+            for (int i = 1; i < wordArr.Length - 1; i++)
             {
-                charArr[i] = '_';
+                wordArr[i] = "_";
             }
+            wordArr[0] = dbWord[0].ToString();
+            wordArr[dbWord.Length - 1] = dbWord[dbWord.Length - 1].ToString();
+            string result = string.Join(" ", wordArr);
 
-            return new string(charArr);
+            return result;
         }
     }
 }

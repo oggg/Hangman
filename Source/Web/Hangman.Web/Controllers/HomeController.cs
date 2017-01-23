@@ -11,6 +11,7 @@ namespace Hangman.Web.Controllers
         {
             this.scores = scores;
         }
+
         public ActionResult Index()
         {
             if (Request.IsAuthenticated)

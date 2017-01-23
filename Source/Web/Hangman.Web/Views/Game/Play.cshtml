@@ -1,4 +1,4 @@
-﻿@model Hangman.Models.Score
+﻿@model Hangman.Web.Models.StatisticsPlayGameModel
 
 <table border="1">
     <tr>
@@ -8,10 +8,10 @@
         <th>WordsGussed</th>
     </tr>
     <tr>
-        <td>@Model.Won</td>
-        <td>@Model.Lost</td>
-        <td>@Model.LettersGussed</td>
-        <td>@Model.WordsGussed</td>
+        <td>@Model.UserScore.Won</td>
+        <td>@Model.UserScore.Lost</td>
+        <td>@Model.UserScore.LettersGussed</td>
+        <td>@Model.UserScore.WordsGussed</td>
     </tr>
 </table>
 
