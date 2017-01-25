@@ -169,7 +169,7 @@ namespace Hangman.Web.Controllers
                     currentScore.Lost++;
                     gps.ImageUrl = string.Format("{0}{1}{2}",
                         HangmanConstants.ImagesContentFolder,
-                        HangmanConstants.ImageLooseWholeWord,
+                        HangmanConstants.ImageLoose,
                         HangmanConstants.ImagesFileExtension);
                     gps.UsedLetters = currentGame.UsedLetters;
                 }
@@ -249,6 +249,20 @@ namespace Hangman.Web.Controllers
                                     CacheItemPriority.Default,
                                     null);
                     }
+                }
+                else
+                {
+                    currentScore.Lost++;
+                    gps.ImageUrl = string.Format("{0}{1}{2}",
+                        HangmanConstants.ImagesContentFolder,
+                        HangmanConstants.ImageLoose,
+                        HangmanConstants.ImagesFileExtension);
+                    gps.UsedLetters = currentGame.UsedLetters;
+                    latestScore = this.scores.UpdateById(currentUserId, currentScore);
+                    this.HttpContext.Cache.Remove(currentUserId);
+                    this.HttpContext.Cache.Remove(gameId.ToString());
+
+                    game = this.games.UpdateState(currentGame.Id, GameState.Ended);
                 }
                 return this.PartialView("_GameVisualization", gps);
             }

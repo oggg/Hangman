@@ -8,10 +8,10 @@
         <th>WordsGussed</th>
     </tr>
     <tr>
-        <td>@Model.UserScore.Won</td>
-        <td>@Model.UserScore.Lost</td>
-        <td>@Model.UserScore.LettersGussed</td>
-        <td>@Model.UserScore.WordsGussed</td>
+        <td id="won">@Model.UserScore.Won</td>
+        <td id="lost">@Model.UserScore.Lost</td>
+        <td id="lettersGussed">@Model.UserScore.LettersGussed</td>
+        <td id="wordsGussed">@Model.UserScore.WordsGussed</td>
     </tr>
 </table>
 <br />
@@ -37,6 +37,23 @@
             },
             success: function (reponse) {
                 ('#word-container').html(reponse);
+                if (response.indexOf('Win')) {
+                    var wonText = parseInt($('#won').text()) + 1;
+                    $('#won').text(wonText);
+
+                    if (response.indexOf('Not')) {
+                        var lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
+                        $('#won').text(lettersGussedText);
+                    }
+                    else {
+                        var wordsGussedText = parseInt($('#wordsGussed').text()) + 1;
+                        $('#won').text(wordsGussedText);
+                    }
+                }
+                if (response.indexOf('Loose')) {
+                    var looseText = parseInt($('#lost').text()) + 1;
+                    $('#lost').text(looseText);
+                }
             }
         });
     });
