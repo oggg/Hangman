@@ -39,11 +39,18 @@ namespace Hangman.Common
             }
             else
             {
+                string[] result = new string[wordArr.Length];
+
+                for (int j = 0; j < wordArr.Length; j++)
+                {
+                    result[j] = wordArr[j];
+                }
+
                 for (int i = 0; i < indexes.Count; i++)
                 {
-                    wordArr[indexes[i]] = letter;
+                    result[indexes[i]] = letter;
                 }
-                return wordArr;
+                return result;
             }
 
         }

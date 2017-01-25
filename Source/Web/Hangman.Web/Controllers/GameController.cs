@@ -69,6 +69,7 @@ namespace Hangman.Web.Controllers
                 Id = newGame.Id,
                 Name = newGame.Name,
                 State = newGame.State,
+                ImageId = 0,
                 Word = randomWord.TheWord,
                 ConvertedWordToPlay = guessWord,
                 UsedLetters = new List<string>(),
@@ -216,7 +217,7 @@ namespace Hangman.Web.Controllers
                                             HangmanConstants.ImageWin,
                                             HangmanConstants.ImagesFileExtension);
                         gps.UsedLetters = currentGame.UsedLetters;
-
+                        gps.CurrentWordState = new string[currentGame.Word.Length];
                         for (int i = 0; i < currentGame.Word.Length; i++)
                         {
                             gps.CurrentWordState[i] = currentGame.Word[i].ToString();
@@ -224,12 +225,23 @@ namespace Hangman.Web.Controllers
                     }
                     else
                     {
+                        if (currentGame.ConvertedWordToPlay.SequenceEqual(constructedWord))
+                        {
+                            gps.ImageUrl = string.Format("{0}{1}{2}",
+                                           HangmanConstants.ImagesContentFolder,
+                                           ++currentGame.ImageId,
+                                           HangmanConstants.ImagesFileExtension);
+                        }
+                        else
+                        {
+                            gps.ImageUrl = string.Format("{0}{1}{2}",
+                                           HangmanConstants.ImagesContentFolder,
+                                           currentGame.ImageId,
+                                           HangmanConstants.ImagesFileExtension);
+                        }
                         gps.CurrentWordState = constructedWord;
                         gps.MovesLeft = currentGame.MovesLeft;
-                        gps.ImageUrl = string.Format("{0}{1}{2}",
-                                           HangmanConstants.ImagesContentFolder,
-                                           HangmanConstants.InitialMoves - currentGame.MovesLeft,
-                                           HangmanConstants.ImagesFileExtension);
+                        currentGame.ConvertedWordToPlay = constructedWord;
                         gps.UsedLetters = currentGame.UsedLetters;
 
                         this.HttpContext.Cache.Insert(

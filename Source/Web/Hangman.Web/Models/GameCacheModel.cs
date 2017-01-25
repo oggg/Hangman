@@ -11,6 +11,8 @@
 
         public GameState State { get; set; }
 
+        public int ImageId { get; set; }
+
         public string Word { get; set; }
 
         public IList<string> UsedLetters { get; set; }

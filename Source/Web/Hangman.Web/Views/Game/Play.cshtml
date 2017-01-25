@@ -35,7 +35,9 @@
                 letters: currentGuess
             },
             success: function (reponse) {
-                ('#word-container').html(reponse);
+                //empty input field
+                $('input[type="text"]').val('');
+                $('#word-container').html(reponse);
                 if (response.indexOf('Win')) {
                     var wonText = parseInt($('#won').text()) + 1;
                     $('#won').text(wonText);
