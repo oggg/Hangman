@@ -1,5 +1,6 @@
 ﻿@model Hangman.Web.Models.GamePlayStateModel
 
-<div id="currentwordstate">@Model.CurrentWordState</div>
-<div id="userletters">@Model.UsedLetters</div>
+<h2 id="currentwordstate">@string.Join(" ", Model.CurrentWordState)</h2>
+<h3 id="userletters">@Model.UsedLetters</h3>
+<h4 id="movesLeft">@Model.MovesLeft</h4>
 <img src="@Url.Content(Model.ImageUrl)" />

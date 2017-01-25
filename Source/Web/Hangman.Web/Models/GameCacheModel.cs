@@ -12,6 +12,6 @@
 
         public string Word { get; set; }
 
-        public string ConvertedWordToPlay { get; set; }
+        public string[] ConvertedWordToPlay { get; set; }
     }
 }

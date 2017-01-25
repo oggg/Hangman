@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Caching;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
@@ -99,6 +101,7 @@ namespace Hangman.Web.Controllers
             {
                 CurrentWordState = game.ConvertedWordToPlay,
                 UsedLetters = string.Empty,
+                MovesLeft = 5,
                 ImageUrl = "~/Content/Images/0.jpg"
             };
 
@@ -112,7 +115,7 @@ namespace Hangman.Web.Controllers
 
         //}
 
-        private string GetGuessWord(string dbWord)
+        private string[] GetGuessWord(string dbWord)
         {
             var wordArr = new string[dbWord.Length];
             for (int i = 1; i < wordArr.Length - 1; i++)
@@ -121,9 +124,37 @@ namespace Hangman.Web.Controllers
             }
             wordArr[0] = dbWord[0].ToString();
             wordArr[dbWord.Length - 1] = dbWord[dbWord.Length - 1].ToString();
-            string result = string.Join(" ", wordArr);
 
-            return result;
+            return wordArr;
+        }
+
+        private IList<int> GetIndexesOfGuessing(string word, string letters)
+        {
+            var indexList = Regex.Matches(word, letters).Cast<Match>()
+                    .Select(m => m.Index)
+                    .ToList();
+
+            return indexList;
+        }
+
+        private string[] ConstructUpdatedWord(string[] wordArr, IList<int> indexes, string letter)
+        {
+            if (indexes.Count == 0
+                || indexes[0] == 0
+                || indexes[0] == wordArr.Length - 1
+                || indexes[indexes.Count - 1] == wordArr.Length - 1)
+            {
+                return wordArr;
+            }
+            else
+            {
+                for (int i = 1; i < indexes.Count - 1; i++)
+                {
+                    wordArr[indexes[i]] = letter;
+                }
+                return wordArr;
+            }
+
         }
     }
 }
