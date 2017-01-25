@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.Caching;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
+using Hangman.Common;
 using Hangman.Models;
 using Hangman.Services.Contracts;
 using Hangman.Web.Models;
@@ -101,8 +102,8 @@ namespace Hangman.Web.Controllers
             {
                 CurrentWordState = game.ConvertedWordToPlay,
                 UsedLetters = string.Empty,
-                MovesLeft = 5,
-                ImageUrl = "~/Content/Images/0.jpg"
+                MovesLeft = HangmanConstants.InitialMoves,
+                ImageUrl = string.Format("{0}{1}{2}", HangmanConstants.ImagesContentFolder, HangmanConstants.ImageStart, HangmanConstants.ImagesFileExtension)
             };
 
             model.GamePlayState = gps;
@@ -128,9 +129,9 @@ namespace Hangman.Web.Controllers
             return wordArr;
         }
 
-        private IList<int> GetIndexesOfGuessing(string word, string letters)
+        private IList<int> GetIndexesOfGuessing(string word, string letter)
         {
-            var indexList = Regex.Matches(word, letters).Cast<Match>()
+            var indexList = Regex.Matches(word, letter).Cast<Match>()
                     .Select(m => m.Index)
                     .ToList();
 

@@ -294,6 +294,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Hangman.Common\Hangman.Common.csproj">
+      <Project>{06aab65a-7e96-407e-a203-677009ad4484}</Project>
+      <Name>Hangman.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Data\Hangman.Data\Hangman.Data.csproj">
       <Project>{01ff50b0-3a1b-4cd9-8818-d995c1a457c3}</Project>
       <Name>Hangman.Data</Name>
