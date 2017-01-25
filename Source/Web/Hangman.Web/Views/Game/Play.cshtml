@@ -32,8 +32,7 @@
             url: "/Game/Guess",
             data: {
                 gameId: gameId,
-                letters: currentGuess,
-                movesLeft: movesLeft
+                letters: currentGuess
             },
             success: function (reponse) {
                 ('#word-container').html(reponse);

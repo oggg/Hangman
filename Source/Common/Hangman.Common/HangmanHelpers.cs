@@ -39,7 +39,7 @@ namespace Hangman.Common
             }
             else
             {
-                for (int i = 1; i < indexes.Count - 1; i++)
+                for (int i = 0; i < indexes.Count; i++)
                 {
                     wordArr[indexes[i]] = letter;
                 }
