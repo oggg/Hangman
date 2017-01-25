@@ -16,18 +16,10 @@
 </table>
 <br />
 <br />
-@using (Ajax.BeginForm("Guess", null,
-                            new AjaxOptions
-                            {
-                                UpdateTargetId = "word-container",
-                                InsertionMode = InsertionMode.Replace,
-                                HttpMethod = "POST",
-                                
-                            }, new { id = "searchForm" }))
-{
-    <input type="text" name="query" />
-    <input type="submit" value="Guess"/>
-}
+
+<input type="text" name="query" />
+<input type="submit" value="Guess" />
+
 <script>
     $('input[type="submit"]').on("click", function () {
         var currentGuess = $('input[type="text"]').val();
