@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Caching;
 using System.Web.Mvc;
 using AutoMapper.QueryableExtensions;
@@ -63,7 +61,7 @@ namespace Hangman.Web.Controllers
             };
             this.games.Add(newGame);
 
-            var guessWord = GetGuessWord(randomWord.TheWord);
+            var guessWord = HangmanHelpers.GetGuessWord(randomWord.TheWord);
 
             GameCacheModel playingGame = new GameCacheModel()
             {
@@ -103,7 +101,10 @@ namespace Hangman.Web.Controllers
                 CurrentWordState = game.ConvertedWordToPlay,
                 UsedLetters = string.Empty,
                 MovesLeft = HangmanConstants.InitialMoves,
-                ImageUrl = string.Format("{0}{1}{2}", HangmanConstants.ImagesContentFolder, HangmanConstants.ImageStart, HangmanConstants.ImagesFileExtension)
+                ImageUrl = string.Format("{0}{1}{2}",
+                                                HangmanConstants.ImagesContentFolder,
+                                                HangmanConstants.ImageStart,
+                                                HangmanConstants.ImagesFileExtension)
             };
 
             model.GamePlayState = gps;
@@ -111,51 +112,12 @@ namespace Hangman.Web.Controllers
             return View(model);
         }
 
-        //public ActionResult Guess()
-        //{
-
-        //}
-
-        private string[] GetGuessWord(string dbWord)
+        public ActionResult Guess(int gameId, string letters, int movesLeft)
         {
-            var wordArr = new string[dbWord.Length];
-            for (int i = 1; i < wordArr.Length - 1; i++)
-            {
-                wordArr[i] = "_";
-            }
-            wordArr[0] = dbWord[0].ToString();
-            wordArr[dbWord.Length - 1] = dbWord[dbWord.Length - 1].ToString();
+            var currentGame = (GameCacheModel)this.HttpContext.Cache[gameId.ToString()];
+            var indexesOfGuessing = HangmanHelpers.GetIndexesOfGuessing(currentGame.Word, letters);
 
-            return wordArr;
-        }
-
-        private IList<int> GetIndexesOfGuessing(string word, string letter)
-        {
-            var indexList = Regex.Matches(word, letter).Cast<Match>()
-                    .Select(m => m.Index)
-                    .ToList();
-
-            return indexList;
-        }
-
-        private string[] ConstructUpdatedWord(string[] wordArr, IList<int> indexes, string letter)
-        {
-            if (indexes.Count == 0
-                || indexes[0] == 0
-                || indexes[0] == wordArr.Length - 1
-                || indexes[indexes.Count - 1] == wordArr.Length - 1)
-            {
-                return wordArr;
-            }
-            else
-            {
-                for (int i = 1; i < indexes.Count - 1; i++)
-                {
-                    wordArr[indexes[i]] = letter;
-                }
-                return wordArr;
-            }
-
+            return this.PartialView("_GameVisualization");
         }
     }
 }

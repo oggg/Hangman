@@ -21,13 +21,33 @@
                             {
                                 UpdateTargetId = "word-container",
                                 InsertionMode = InsertionMode.Replace,
-                                HttpMethod = "POST"
+                                HttpMethod = "POST",
+                                
                             }, new { id = "searchForm" }))
 {
     <input type="text" name="query" />
-    <input type="submit" />
+    <input type="submit" value="Guess"/>
 }
-
+<script>
+    $('input[type="submit"]').on("click", function () {
+        var currentGuess = $('input[type="text"]').val();
+        var url = window.location.href;
+        var gameId = parseInt(url.substring(url.lastIndexOf('/') + 1));
+        var movesLeft = parseInt($('#movesLeft').text());
+        $.ajax({
+            type: "POST",
+            url: "/Game/Guess",
+            data: {
+                gameId: gameId,
+                letters: currentGuess,
+                movesLeft: movesLeft
+            },
+            success: function (reponse) {
+                ('#word-container').html(reponse);
+            }
+        });
+    });
+</script>
 <div id="word-container">
     @Html.Partial("_GameVisualization", Model.GamePlayState)
 </div>
