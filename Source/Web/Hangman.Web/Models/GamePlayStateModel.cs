@@ -1,4 +1,6 @@
-﻿namespace Hangman.Web.Models
+﻿using System.Collections.Generic;
+
+namespace Hangman.Web.Models
 {
     public class GamePlayStateModel
     {
@@ -6,7 +8,7 @@
 
         public string ImageUrl { get; set; }
 
-        public string UsedLetters { get; set; }
+        public IList<string> UsedLetters { get; set; }
 
         public int MovesLeft { get; set; }
     }

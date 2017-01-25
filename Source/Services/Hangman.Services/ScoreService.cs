@@ -30,5 +30,20 @@
         {
             return this.scores.All().FirstOrDefault(s => s.Id == id);
         }
+
+        public Score UpdateById(string id, Score updateScore)
+        {
+            var scoreToUpdate = this.scores.GetById(id);
+
+            scoreToUpdate.LettersGussed = updateScore.LettersGussed;
+            scoreToUpdate.Lost = updateScore.Lost;
+            scoreToUpdate.Won = updateScore.Won;
+            scoreToUpdate.WordsGussed = updateScore.WordsGussed;
+
+            this.scores.SaveChanges();
+
+            return scoreToUpdate;
+            //or return updateScore;
+        }
     }
 }

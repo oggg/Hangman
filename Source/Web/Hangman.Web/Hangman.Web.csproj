@@ -213,6 +213,7 @@
     <Compile Include="Models\GameCreateViewModel.cs" />
     <Compile Include="Models\GamePlayStateModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ScoreCacheModel.cs" />
     <Compile Include="Models\StatisticsPlayGameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -226,6 +227,10 @@
     <Content Include="Content\Images\3.jpg" />
     <Content Include="Content\Images\4.jpg" />
     <Content Include="Content\Images\5.jpg" />
+    <Content Include="Content\Images\6.jpg" />
+    <Content Include="Content\Images\7.jpg" />
+    <Content Include="Content\Images\8.jpg" />
+    <Content Include="Content\Images\9.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

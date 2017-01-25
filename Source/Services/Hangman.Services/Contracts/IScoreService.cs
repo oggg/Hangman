@@ -10,5 +10,7 @@ namespace Hangman.Services.Contracts
         IQueryable<Score> GetAll();
 
         Score GetById(string id);
+
+        Score UpdateById(string id, Score updateScore);
     }
 }

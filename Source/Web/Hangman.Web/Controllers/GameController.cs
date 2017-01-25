@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Caching;
 using System.Web.Mvc;
@@ -69,7 +70,15 @@ namespace Hangman.Web.Controllers
                 Name = newGame.Name,
                 State = newGame.State,
                 Word = randomWord.TheWord,
-                ConvertedWordToPlay = guessWord
+                ConvertedWordToPlay = guessWord,
+                UsedLetters = new List<string>(),
+                MovesLeft = HangmanConstants.InitialMoves
+            };
+
+            ScoreCacheModel scorePerGame = new ScoreCacheModel()
+            {
+                Id = User.Identity.GetUserId(),
+                LettersGussed = 0
             };
 
             if (this.HttpContext.Cache[playingGame.Id.ToString()] == null)
@@ -93,13 +102,25 @@ namespace Hangman.Web.Controllers
             var game = (GameCacheModel)this.HttpContext.Cache[id.ToString()];
             var currentPlayerScore = this.scores.GetById(User.Identity.GetUserId());
 
+            if (this.HttpContext.Cache[currentPlayerScore.Id] == null)
+            {
+                this.HttpContext.Cache.Insert(
+                    currentPlayerScore.Id,
+                    currentPlayerScore,
+                    null,
+                    DateTime.Now.AddYears(1),
+                    TimeSpan.Zero,
+                    CacheItemPriority.Default,
+                    null);
+            }
+
             StatisticsPlayGameModel model = new StatisticsPlayGameModel();
             model.UserScore = currentPlayerScore;
 
             GamePlayStateModel gps = new GamePlayStateModel()
             {
                 CurrentWordState = game.ConvertedWordToPlay,
-                UsedLetters = string.Empty,
+                UsedLetters = new List<string>(),
                 MovesLeft = HangmanConstants.InitialMoves,
                 ImageUrl = string.Format("{0}{1}{2}",
                                                 HangmanConstants.ImagesContentFolder,
@@ -112,12 +133,126 @@ namespace Hangman.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Guess(int gameId, string letters, int movesLeft)
+        public ActionResult Guess(int gameId, string letters)
         {
-            var currentGame = (GameCacheModel)this.HttpContext.Cache[gameId.ToString()];
-            var indexesOfGuessing = HangmanHelpers.GetIndexesOfGuessing(currentGame.Word, letters);
+            GameCacheModel currentGame = (GameCacheModel)this.HttpContext.Cache[gameId.ToString()];
+            var currentUserId = User.Identity.GetUserId();
+            Score currentScore = (Score)this.HttpContext.Cache[currentUserId];
+            Score latestScore;
+            Game game = new Game();
+            GamePlayStateModel gps = new GamePlayStateModel();
 
-            return this.PartialView("_GameVisualization");
+            // win/loose game with a whole word
+            if (letters.Length > 1)
+            {
+                this.HttpContext.Cache.Remove(currentUserId);
+                this.HttpContext.Cache.Remove(gameId.ToString());
+                gps.MovesLeft--;
+
+                if (string.Compare(currentGame.Word, letters, true) == 0)
+                {
+                    currentScore.WordsGussed++;
+                    currentScore.Won++;
+
+                    for (int i = 0; i < currentGame.Word.Length; i++)
+                    {
+                        gps.CurrentWordState[i] = currentGame.Word[i].ToString();
+                    }
+                    gps.ImageUrl = string.Format("{0}{1}{2}",
+                        HangmanConstants.ImagesContentFolder,
+                        HangmanConstants.ImageWinWholeWord,
+                        HangmanConstants.ImagesFileExtension);
+                    gps.UsedLetters = currentGame.UsedLetters;
+                }
+                else
+                {
+                    currentScore.Lost++;
+                    gps.ImageUrl = string.Format("{0}{1}{2}",
+                        HangmanConstants.ImagesContentFolder,
+                        HangmanConstants.ImageLooseWholeWord,
+                        HangmanConstants.ImagesFileExtension);
+                    gps.UsedLetters = currentGame.UsedLetters;
+                }
+
+                latestScore = this.scores.UpdateById(currentUserId, currentScore);
+                game = this.games.UpdateState(currentGame.Id, GameState.Ended);
+
+                return this.PartialView("_GameVisualization", gps);
+            }
+            // check current conditions when only one letter is used
+            else
+            {
+                var indexesOfGuessing = HangmanHelpers.GetIndexesOfGuessing(currentGame.Word, letters);
+                string[] constructedWord;
+
+                if (indexesOfGuessing.Count != 0)
+                {
+                    constructedWord = HangmanHelpers.ConstructUpdatedWord(currentGame.ConvertedWordToPlay, indexesOfGuessing, letters);
+                }
+                else
+                {
+                    constructedWord = currentGame.ConvertedWordToPlay;
+                }
+
+                bool wordGuessed = string.Compare(currentGame.Word.ToLower(), string.Join("", constructedWord).ToLower()) == 0;
+
+                if (currentGame.MovesLeft > 0)
+                {
+                    currentGame.MovesLeft--;
+                    currentGame.UsedLetters.Add(letters);
+
+                    if (wordGuessed)
+                    {
+                        currentScore.LettersGussed++;
+                        currentScore.Won++;
+
+                        latestScore = this.scores.UpdateById(currentUserId, currentScore);
+                        this.HttpContext.Cache.Remove(currentUserId);
+                        this.HttpContext.Cache.Remove(gameId.ToString());
+
+                        game = this.games.UpdateState(currentGame.Id, GameState.Ended);
+                        gps.ImageUrl = string.Format("{0}{1}{2}",
+                                            HangmanConstants.ImagesContentFolder,
+                                            HangmanConstants.ImageWin,
+                                            HangmanConstants.ImagesFileExtension);
+                        gps.UsedLetters = currentGame.UsedLetters;
+
+                        for (int i = 0; i < currentGame.Word.Length; i++)
+                        {
+                            gps.CurrentWordState[i] = currentGame.Word[i].ToString();
+                        }
+                    }
+                    else
+                    {
+                        gps.CurrentWordState = constructedWord;
+                        gps.MovesLeft = currentGame.MovesLeft;
+                        gps.ImageUrl = string.Format("{0}{1}{2}",
+                                           HangmanConstants.ImagesContentFolder,
+                                           HangmanConstants.InitialMoves - currentGame.MovesLeft,
+                                           HangmanConstants.ImagesFileExtension);
+                        gps.UsedLetters = currentGame.UsedLetters;
+
+                        this.HttpContext.Cache.Insert(
+                                    currentGame.Id.ToString(),
+                                    currentGame,
+                                    null,
+                                    DateTime.Now.AddYears(1),
+                                    TimeSpan.Zero,
+                                    CacheItemPriority.Default,
+                                    null);
+                        this.HttpContext.Cache.Insert(
+                                    currentScore.Id,
+                                    currentScore,
+                                    null,
+                                    DateTime.Now.AddYears(1),
+                                    TimeSpan.Zero,
+                                    CacheItemPriority.Default,
+                                    null);
+                    }
+                }
+                return this.PartialView("_GameVisualization", gps);
+            }
         }
+
     }
 }

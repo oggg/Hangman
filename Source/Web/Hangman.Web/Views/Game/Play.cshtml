@@ -16,16 +16,17 @@
 </table>
 <br />
 <br />
-
 <input type="text" name="query" />
 <input type="submit" value="Guess" />
+<div id="word-container">
+    @Html.Partial("_GameVisualization", Model.GamePlayState)
+</div>
 
 <script>
     $('input[type="submit"]').on("click", function () {
         var currentGuess = $('input[type="text"]').val();
         var url = window.location.href;
         var gameId = parseInt(url.substring(url.lastIndexOf('/') + 1));
-        var movesLeft = parseInt($('#movesLeft').text());
         $.ajax({
             type: "POST",
             url: "/Game/Guess",
@@ -40,6 +41,3 @@
         });
     });
 </script>
-<div id="word-container">
-    @Html.Partial("_GameVisualization", Model.GamePlayState)
-</div>
