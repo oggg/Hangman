@@ -143,7 +143,7 @@ namespace Hangman.Web.Controllers
             Game game = new Game();
             GamePlayStateModel gps = new GamePlayStateModel();
             gps.MovesLeft = currentGame.MovesLeft;
-            // win/loose game with a whole word
+            #region whole word win/loose
             if (letters.Length > 1)
             {
                 this.HttpContext.Cache.Remove(currentUserId);
@@ -186,7 +186,8 @@ namespace Hangman.Web.Controllers
                 }
                 return this.PartialView("_GameVisualization", gps);
             }
-            // check current conditions when only one letter is used
+            #endregion
+            #region letters guessing
             else
             {
                 var indexesOfGuessing = HangmanHelpers.GetIndexesOfGuessing(currentGame.Word, letters);
@@ -203,9 +204,10 @@ namespace Hangman.Web.Controllers
 
                 bool wordGuessed = string.Compare(currentGame.Word.ToLower(), string.Join("", constructedWord).ToLower()) == 0;
 
+                //line below was included in if statement but this incremented incorrectly whe count of moves
+                currentGame.MovesLeft--;
                 if (currentGame.MovesLeft > 0)
                 {
-                    currentGame.MovesLeft--;
                     currentGame.UsedLetters.Add(letters);
 
                     if (wordGuessed)
@@ -279,11 +281,15 @@ namespace Hangman.Web.Controllers
                     latestScore = this.scores.UpdateById(currentUserId, currentScore);
                     this.HttpContext.Cache.Remove(currentUserId);
                     this.HttpContext.Cache.Remove(gameId.ToString());
-
+                    if (gps.CurrentWordState == null)
+                    {
+                        gps.CurrentWordState = new string[currentGame.Word.Length];
+                    }
                     game = this.games.UpdateState(currentGame.Id, GameState.Ended);
                 }
                 return this.PartialView("_GameVisualization", gps);
             }
+            #endregion
         }
 
     }
