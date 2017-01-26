@@ -142,7 +142,7 @@ namespace Hangman.Web.Controllers
             Score latestScore;
             Game game = new Game();
             GamePlayStateModel gps = new GamePlayStateModel();
-
+            gps.MovesLeft = currentGame.MovesLeft;
             // win/loose game with a whole word
             if (letters.Length > 1)
             {
@@ -150,6 +150,8 @@ namespace Hangman.Web.Controllers
                 this.HttpContext.Cache.Remove(gameId.ToString());
                 gps.MovesLeft--;
 
+                //just added
+                gps.CurrentWordState = new string[letters.Length];
                 if (string.Compare(currentGame.Word, letters, true) == 0)
                 {
                     currentScore.WordsGussed++;

@@ -34,10 +34,10 @@
                 gameId: gameId,
                 letters: currentGuess
             },
-            success: function (reponse) {
+            success: function (response) {
                 //empty input field
                 $('input[type="text"]').val('');
-                $('#word-container').html(reponse);
+                $('#word-container').html(response);
                 if (response.indexOf('Win')) {
                     var wonText = parseInt($('#won').text()) + 1;
                     $('#won').text(wonText);
