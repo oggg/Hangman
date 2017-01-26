@@ -150,10 +150,9 @@ namespace Hangman.Web.Controllers
                 this.HttpContext.Cache.Remove(gameId.ToString());
                 gps.MovesLeft--;
 
-                //just added
-                gps.CurrentWordState = new string[letters.Length];
                 if (string.Compare(currentGame.Word, letters, true) == 0)
                 {
+                    gps.CurrentWordState = new string[letters.Length];
                     currentScore.WordsGussed++;
                     currentScore.Won++;
 
@@ -180,6 +179,11 @@ namespace Hangman.Web.Controllers
                 latestScore = this.scores.UpdateById(currentUserId, currentScore);
                 game = this.games.UpdateState(currentGame.Id, GameState.Ended);
 
+                //added for the null reference in partial view
+                if (gps.CurrentWordState == null)
+                {
+                    gps.CurrentWordState = new string[0];
+                }
                 return this.PartialView("_GameVisualization", gps);
             }
             // check current conditions when only one letter is used

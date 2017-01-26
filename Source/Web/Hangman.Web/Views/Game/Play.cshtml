@@ -27,6 +27,7 @@
         var currentGuess = $('input[type="text"]').val();
         var url = window.location.href;
         var gameId = parseInt(url.substring(url.lastIndexOf('/') + 1));
+        var currentLettersGuessedCount = ($('#currentwordstate').text().match(/_/g) || []).length;
         $.ajax({
             type: "POST",
             url: "/Game/Guess",
@@ -35,25 +36,40 @@
                 letters: currentGuess
             },
             success: function (response) {
-                //empty input field
                 $('input[type="text"]').val('');
                 $('#word-container').html(response);
-                if (response.indexOf('Win')) {
-                    var wonText = parseInt($('#won').text()) + 1;
+                if (response.indexOf('ImageWinWholeWord') > -1) {
+                    let wonText = parseInt($('#won').text()) + 1;
                     $('#won').text(wonText);
-
-                    if (response.indexOf('Not')) {
-                        var lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
-                        $('#won').text(lettersGussedText);
-                    }
-                    else {
-                        var wordsGussedText = parseInt($('#wordsGussed').text()) + 1;
-                        $('#won').text(wordsGussedText);
-                    }
+                    let wordsGussedText = parseInt($('#wordsGussed').text()) + 1;
+                    $('#wordsGussed').text(wordsGussedText);
+                    $('input[type="submit"]').attr('disabled', 'disabled');
                 }
-                if (response.indexOf('Loose')) {
+                let updatedLettersGuessedCount = ($('#currentwordstate').text().match(/_/g) || []).length;
+
+                //changed if due to wrong whole word update of guessed letters
+                if (updatedLettersGuessedCount != currentLettersGuessedCount 
+                            && response.indexOf('ImageWinWholeWord') == -1
+                            && response.indexOf('ImageWinNotWholeWord') == -1
+                            && response.indexOf('ImageLoose') == -1) {
+                    let lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
+                    $('#lettersGussed').text(lettersGussedText);
+                }
+
+                if (response.indexOf('ImageWinNotWholeWord') > -1) {
+                    let updatedLettersGuessedCount = ($('#currentwordstate').text().match(/_/g) || []).length;
+                    if (updatedLettersGuessedCount != currentLettersGuessedCount) {
+                        let lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
+                        $('#lettersGussed').text(lettersGussedText);
+                    }
+                    let wonText = parseInt($('#won').text()) + 1;
+                    $('#won').text(wonText);
+                    $('input[type="submit"]').attr('disabled', 'disabled');
+                }
+                if (response.indexOf('ImageLoose') > -1) {
                     var looseText = parseInt($('#lost').text()) + 1;
                     $('#lost').text(looseText);
+                    $('input[type="submit"]').attr('disabled', 'disabled');
                 }
             }
         });
