@@ -226,7 +226,6 @@
     <Content Include="Content\Images\2.jpg" />
     <Content Include="Content\Images\3.jpg" />
     <Content Include="Content\Images\4.jpg" />
-    <Content Include="Content\Images\5.jpg" />
     <Content Include="Content\Images\ImageWinNotWholeWord.jpg" />
     <Content Include="Content\Images\ImageWinWholeWord.jpg" />
     <Content Include="Content\Images\ImageLoose.jpg" />

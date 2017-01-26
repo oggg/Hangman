@@ -196,6 +196,7 @@ namespace Hangman.Web.Controllers
                 if (indexesOfGuessing.Count != 0)
                 {
                     constructedWord = HangmanHelpers.ConstructUpdatedWord(currentGame.ConvertedWordToPlay, indexesOfGuessing, letters);
+                    currentScore.LettersGussed++;
                 }
                 else
                 {
@@ -204,20 +205,22 @@ namespace Hangman.Web.Controllers
 
                 bool wordGuessed = string.Compare(currentGame.Word.ToLower(), string.Join("", constructedWord).ToLower()) == 0;
 
-                //line below was included in if statement but this incremented incorrectly whe count of moves
+                //lines below was included in if statement but this incremented incorrectly whe count of moves
                 currentGame.MovesLeft--;
+                currentGame.UsedLetters.Add(letters);
                 if (currentGame.MovesLeft > 0)
                 {
-                    currentGame.UsedLetters.Add(letters);
-
                     if (wordGuessed)
                     {
-                        currentScore.LettersGussed++;
+                        //currentScore.LettersGussed++;
                         currentScore.Won++;
 
                         latestScore = this.scores.UpdateById(currentUserId, currentScore);
                         this.HttpContext.Cache.Remove(currentUserId);
                         this.HttpContext.Cache.Remove(gameId.ToString());
+
+                        latestScore = this.scores.UpdateById(currentUserId, currentScore);
+                        game = this.games.UpdateState(currentGame.Id, GameState.Ended);
 
                         game = this.games.UpdateState(currentGame.Id, GameState.Ended);
                         gps.ImageUrl = string.Format("{0}{1}{2}",
@@ -273,6 +276,7 @@ namespace Hangman.Web.Controllers
                 else
                 {
                     currentScore.Lost++;
+                    gps.MovesLeft = currentGame.MovesLeft;
                     gps.ImageUrl = string.Format("{0}{1}{2}",
                         HangmanConstants.ImagesContentFolder,
                         HangmanConstants.ImageLoose,
@@ -283,7 +287,7 @@ namespace Hangman.Web.Controllers
                     this.HttpContext.Cache.Remove(gameId.ToString());
                     if (gps.CurrentWordState == null)
                     {
-                        gps.CurrentWordState = new string[currentGame.Word.Length];
+                        gps.CurrentWordState = constructedWord;
                     }
                     game = this.games.UpdateState(currentGame.Id, GameState.Ended);
                 }
