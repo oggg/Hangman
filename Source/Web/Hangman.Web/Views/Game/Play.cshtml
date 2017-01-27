@@ -27,7 +27,7 @@
         var currentGuess = $('input[type="text"]').val();
         var url = window.location.href;
         var gameId = parseInt(url.substring(url.lastIndexOf('/') + 1));
-        var currentLettersGuessedCount = ($('#currentwordstate').text().match(/_/g) || []).length;
+        var currentLettersGuessedCount = lettersGuessedCount();
         $.ajax({
             type: "POST",
             url: "/Game/Guess",
@@ -39,13 +39,11 @@
                 $('input[type="text"]').val('');
                 $('#word-container').html(response);
                 if (response.indexOf('ImageWinWholeWord') > -1) {
-                    let wonText = parseInt($('#won').text()) + 1;
-                    $('#won').text(wonText);
-                    let wordsGussedText = parseInt($('#wordsGussed').text()) + 1;
-                    $('#wordsGussed').text(wordsGussedText);
+                    scoreUpdate('#won');
+                    scoreUpdate('#wordsGussed');
                     disableSubmitButton();
                 }
-                let updatedLettersGuessedCount = ($('#currentwordstate').text().match(/_/g) || []).length;
+                var updatedLettersGuessedCount = lettersGuessedCount();
 
                 //changed if due to wrong whole word update of guessed letters appears
                 if (updatedLettersGuessedCount != currentLettersGuessedCount 
@@ -56,28 +54,33 @@
                 }
 
                 if (response.indexOf('ImageWinNotWholeWord') > -1) {
-                    let updatedLettersGuessedCountWin = ($('#currentwordstate').text().match(/_/g) || []).length;
+                    var updatedLettersGuessedCountWin = lettersGuessedCount();
 
                     if (updatedLettersGuessedCountWin != currentLettersGuessedCount) {
                         updateGuessedLetters();
                     }
-                    let wonText = parseInt($('#won').text()) + 1;
-                    $('#won').text(wonText);
+                    scoreUpdate('#won');
                     disableSubmitButton();
                 }
                 if (response.indexOf('ImageLoose') > -1) {
-                    var looseText = parseInt($('#lost').text()) + 1;
-                    $('#lost').text(looseText);
+                    scoreUpdate('#lost');
                     disableSubmitButton();
                 }
             }
         });
     });
     function updateGuessedLetters() {
-        let lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
+        var lettersGussedText = parseInt($('#lettersGussed').text()) + 1;
         $('#lettersGussed').text(lettersGussedText);
     };
     function disableSubmitButton() {
         $('input[type="submit"]').attr('disabled', 'disabled');
+    };
+    function lettersGuessedCount() {
+        return ($('#currentwordstate').text().match(/_/g) || []).length;
+    }
+    function scoreUpdate(selector) {
+        let currentText = parseInt($(selector).text()) + 1;
+        $(selector).text(currentText);
     }
 </script>
