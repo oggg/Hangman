@@ -36,7 +36,17 @@ namespace Hangman.Web.Controllers
                                         .ToList();
 
             ViewBag.Categories = allCategories;
-            //TODO: add cache for the dropdown
+
+            //client side validation prohibits invalid model state submits
+            //this.HttpContext.Cache.Insert(
+            //        "categories",
+            //        allCategories,
+            //        null,
+            //        DateTime.Now.AddYears(1),
+            //        TimeSpan.Zero,
+            //        CacheItemPriority.Default,
+            //        null);
+
             return View();
         }
 
@@ -44,10 +54,12 @@ namespace Hangman.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(GameCreateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            //client side validation prohibits invalid model state submits
+            //if (!ModelState.IsValid)
+            //{
+            //    var categories = (List<CategoryViewModel>)this.HttpContext.Cache["categories"];
+            //    return View(model);
+            //}
 
             var randomWord = this.words.GetRandom(model.CategoryId);
 
