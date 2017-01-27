@@ -4,12 +4,11 @@ using Hangman.Services.Contracts;
 
 namespace Hangman.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly IScoreService scores;
         public HomeController(IScoreService scores)
+            : base(scores)
         {
-            this.scores = scores;
         }
 
         public ActionResult Index()

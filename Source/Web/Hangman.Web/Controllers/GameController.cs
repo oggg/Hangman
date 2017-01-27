@@ -13,18 +13,17 @@ using Microsoft.AspNet.Identity;
 namespace Hangman.Web.Controllers
 {
     [Authorize]
-    public class GameController : Controller
+    public class GameController : BaseController
     {
         private readonly IGameService games;
         private readonly IWordService words;
         private readonly ICategoryService categories;
-        private readonly IScoreService scores;
         public GameController(IGameService games, IWordService words, ICategoryService categories, IScoreService scores)
+            : base(scores)
         {
             this.games = games;
             this.words = words;
             this.categories = categories;
-            this.scores = scores;
         }
 
         [HttpGet]
