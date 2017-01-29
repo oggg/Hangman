@@ -2,8 +2,9 @@
 {
     using System.Collections.Generic;
     using Hangman.Models;
+    using Infrastructure.Mapping;
 
-    public class GameCacheModel
+    public class GameCacheModel : IMapFrom<Game>
     {
         public int Id { get; set; }
 
