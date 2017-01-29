@@ -11,6 +11,7 @@ namespace Hangman.Web.Controllers
         {
         }
 
+        [OutputCache(Duration = 10, VaryByParam = "none")]
         public ActionResult Index()
         {
             if (Request.IsAuthenticated)
