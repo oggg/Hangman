@@ -154,6 +154,8 @@ namespace Hangman.Web.Controllers
             Game game = new Game();
             GamePlayStateModel gps = new GamePlayStateModel();
             gps.MovesLeft = currentGame.MovesLeft;
+            gps.CurrentWordState = new string[currentGame.Word.Length];
+
             #region whole word win/loose
             if (letters.Length > 1)
             {
@@ -163,7 +165,6 @@ namespace Hangman.Web.Controllers
 
                 if (string.Compare(currentGame.Word, letters, true) == 0)
                 {
-                    gps.CurrentWordState = new string[letters.Length];
                     currentScore.WordsGussed++;
                     currentScore.Won++;
 
@@ -190,11 +191,6 @@ namespace Hangman.Web.Controllers
                 latestScore = this.scores.UpdateById(currentUserId, currentScore);
                 game = this.games.UpdateState(currentGame.Id, GameState.Ended);
 
-                //added for the null reference in partial view
-                if (gps.CurrentWordState == null)
-                {
-                    gps.CurrentWordState = new string[0];
-                }
                 return this.PartialView("_GameVisualization", gps);
             }
             #endregion
@@ -216,14 +212,13 @@ namespace Hangman.Web.Controllers
 
                 bool wordGuessed = string.Compare(currentGame.Word.ToLower(), string.Join("", constructedWord).ToLower()) == 0;
 
-                //lines below was included in if statement but this incremented incorrectly whe count of moves
                 currentGame.MovesLeft--;
                 currentGame.UsedLetters.Add(letters);
+
                 if (currentGame.MovesLeft > 0)
                 {
                     if (wordGuessed)
                     {
-                        //currentScore.LettersGussed++;
                         currentScore.Won++;
 
                         latestScore = this.scores.UpdateById(currentUserId, currentScore);
@@ -234,12 +229,13 @@ namespace Hangman.Web.Controllers
                         game = this.games.UpdateState(currentGame.Id, GameState.Ended);
 
                         game = this.games.UpdateState(currentGame.Id, GameState.Ended);
+
                         gps.ImageUrl = string.Format("{0}{1}{2}",
                                             HangmanConstants.ImagesContentFolder,
                                             HangmanConstants.ImageWin,
                                             HangmanConstants.ImagesFileExtension);
                         gps.UsedLetters = currentGame.UsedLetters;
-                        gps.CurrentWordState = new string[currentGame.Word.Length];
+
                         for (int i = 0; i < currentGame.Word.Length; i++)
                         {
                             gps.CurrentWordState[i] = currentGame.Word[i].ToString();
@@ -296,10 +292,9 @@ namespace Hangman.Web.Controllers
                     latestScore = this.scores.UpdateById(currentUserId, currentScore);
                     this.HttpContext.Cache.Remove(currentUserId);
                     this.HttpContext.Cache.Remove(gameId.ToString());
-                    if (gps.CurrentWordState == null)
-                    {
-                        gps.CurrentWordState = constructedWord;
-                    }
+
+                    gps.CurrentWordState = constructedWord;
+
                     game = this.games.UpdateState(currentGame.Id, GameState.Ended);
                 }
                 return this.PartialView("_GameVisualization", gps);
